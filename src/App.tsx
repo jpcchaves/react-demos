@@ -88,13 +88,9 @@ const App = () => {
 	};
 
 	useEffect(() => {
-		// Promise
-		// .all([
-		// 	getActors(), getDirectors(), getCategories(), getMovies()]);
-		getActors();
-		getDirectors();
-		getCategories();
-		getMovies()
+		Promise
+		.all([
+			getActors(), getDirectors(), getCategories(), getMovies()]);
 	}, []);
 
 	const makeDirectorAndActorOptions = (rawData: Array<IDirector | IActor>) => {
@@ -145,26 +141,31 @@ const App = () => {
 					</div>
 				</SimpleGrid>
 			</SimpleGrid>
-			<SimpleGrid columns={3} mt="12" gridGap={12}>
-				{(movies || []).map(({ movie, rating }) => (
-					<Box
-						key={movie.id}
-						display="flex"
-						alignItems="center"
-						justifyContent="center"
-						flexDir="column"
-						textAlign="justify"
-					>
-						<Image src={movie.posterUrl} width={150} height={250} />
-						<Heading size={"sm"}>
-							{movie.name} {rating}/5
-						</Heading>
-						<Text>{movie.shortDescription}</Text>
-					</Box>
-				))}
-			</SimpleGrid>
+			{makeMoviesList(movies)}
 		</Container>
 	);
 };
 
 export default App;
+
+const makeMoviesList = (movies: any) => {
+	return <SimpleGrid columns={3} mt="12" gridGap={12}>
+		{(movies || []).map(({ movie, rating }) => (
+			<Box
+				key={movie.id}
+				display="flex"
+				alignItems="center"
+				justifyContent="center"
+				flexDir="column"
+				textAlign="justify"
+			>
+				<Image src={movie.posterUrl} width={150} height={250} />
+				<Heading size={"sm"}>
+					{movie.name} {rating}/5
+				</Heading>
+				<Text>{movie.shortDescription}</Text>
+			</Box>
+		))}
+	</SimpleGrid>;
+}
+
