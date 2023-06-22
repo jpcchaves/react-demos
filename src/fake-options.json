@@ -1,0 +1,28 @@
+{
+    "options": [
+        {
+            "value": "Trabalho",
+            "label": "Trabalho"
+        },
+        {
+            "value": "Casa",
+            "label": "Casa"
+        },
+        {
+            "value": "Lazer",
+            "label": "Lazer"
+        },
+        {
+            "value": "Outro",
+            "label": "Outro"
+        },
+        {
+            "value": "Colégio",
+            "label": "Colégio"
+        },
+        {
+            "value": "Faculdade",
+            "label": "Faculdade"
+        }
+    ]
+}

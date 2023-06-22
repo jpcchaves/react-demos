@@ -36,6 +36,8 @@ interface ICategories {
 
 interface IMoviesApiResponse {}
 
+import OptionsData from './fake-options.json'
+
 const App = () => {
 	const [directorsPage, setDirectorsPage] =
 		useState<IApiRespondePaginated<IDirector> | null>(null);
@@ -137,6 +139,17 @@ const App = () => {
 							isMulti
 							name="colors"
 							options={makeCategoriesOptions(categories || [])}
+						/>
+					</div>
+				</SimpleGrid>
+
+				<SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gridGap={6} mt={10}>
+					<div>
+						<h1>Selecione os Diretores do Filme</h1>
+						<Select
+							isMulti
+							name="colors"
+							options={OptionsData.options || []}
 						/>
 					</div>
 				</SimpleGrid>
