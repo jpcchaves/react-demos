@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import http from "./http-common/http";
-import Select from "react-select";
 import {
 	Box,
 	Container,
@@ -9,8 +6,11 @@ import {
 	SimpleGrid,
 	Text,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import Select from "react-select";
+import http from "./http-common/http";
 
-import animateScrollTo from 'animated-scroll-to';
+import animateScrollTo from "animated-scroll-to";
 
 interface IApiRespondePaginated<T> {
 	content: Array<T>;
@@ -46,6 +46,7 @@ interface IMovies {
 	shortDescription: string;
 }
 
+import { Base64Generator } from "./components/base64Generator";
 import OptionsData from "./fake-options.json";
 
 const App = () => {
@@ -121,9 +122,8 @@ const App = () => {
 		});
 	};
 
-
 	return (
-		<Container maxW="container.lg" className='cointainer-test'>
+		<Container maxW="container.lg" className="cointainer-test">
 			<SimpleGrid columns={1} mt={5}>
 				<SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gridGap={6}>
 					<div>
@@ -161,13 +161,24 @@ const App = () => {
 			</SimpleGrid>
 			{makeMoviesList(movies)}
 
-			<Container display='flex' h="container.lg" w="container.xl" bg={"red.300"}>
+			<Container
+				display="flex"
+				h="container.lg"
+				w="container.xl"
+				bg={"red.300"}
+			></Container>
+
+			<Container display="flex" bg={"blue.300"} my="40">
+				<Box
+					onClick={() =>
+						animateScrollTo(document.querySelector(".cointainer-test"))
+					}
+				>
+					Scroll
+				</Box>
 			</Container>
 
-			<Container display='flex' bg={"blue.300"} my='40'>
-				<Box onClick={() => animateScrollTo(document.querySelector('.cointainer-test'))}>Scroll</Box>
-			</Container>
-			
+			<Base64Generator />
 		</Container>
 	);
 };
