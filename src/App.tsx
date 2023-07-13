@@ -10,6 +10,8 @@ import {
 	Text,
 } from "@chakra-ui/react";
 
+import animateScrollTo from 'animated-scroll-to';
+
 interface IApiRespondePaginated<T> {
 	content: Array<T>;
 	pageNo: number;
@@ -36,7 +38,15 @@ interface ICategories {
 
 interface IMoviesApiResponse {}
 
-import OptionsData from './fake-options.json'
+interface IMovies {
+	name: string;
+	rating: string;
+	id?: string;
+	posterUrl: string;
+	shortDescription: string;
+}
+
+import OptionsData from "./fake-options.json";
 
 const App = () => {
 	const [directorsPage, setDirectorsPage] =
@@ -90,9 +100,7 @@ const App = () => {
 	};
 
 	useEffect(() => {
-		Promise
-		.all([
-			getActors(), getDirectors(), getCategories(), getMovies()]);
+		Promise.all([getActors(), getDirectors(), getCategories(), getMovies()]);
 	}, []);
 
 	const makeDirectorAndActorOptions = (rawData: Array<IDirector | IActor>) => {
@@ -113,8 +121,9 @@ const App = () => {
 		});
 	};
 
+
 	return (
-		<Container maxW="container.lg">
+		<Container maxW="container.lg" className='cointainer-test'>
 			<SimpleGrid columns={1} mt={5}>
 				<SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gridGap={6}>
 					<div>
@@ -146,39 +155,46 @@ const App = () => {
 				<SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gridGap={6} mt={10}>
 					<div>
 						<h1>Selecione os Diretores do Filme</h1>
-						<Select
-							isMulti
-							name="colors"
-							options={OptionsData.options || []}
-						/>
+						<Select isMulti name="colors" options={OptionsData.options || []} />
 					</div>
 				</SimpleGrid>
 			</SimpleGrid>
 			{makeMoviesList(movies)}
+
+			<Container display='flex' h="container.lg" w="container.xl" bg={"red.300"}>
+			</Container>
+
+			<Container display='flex' bg={"blue.300"} my='40'>
+				<Box onClick={() => animateScrollTo(document.querySelector('.cointainer-test'))}>Scroll</Box>
+			</Container>
+			
 		</Container>
 	);
 };
 
 export default App;
 
-const makeMoviesList = (movies: any) => {
-	return <SimpleGrid columns={3} mt="12" gridGap={12}>
-		{(movies || []).map(({ movie, rating }) => (
-			<Box
-				key={movie.id}
-				display="flex"
-				alignItems="center"
-				justifyContent="center"
-				flexDir="column"
-				textAlign="justify"
-			>
-				<Image src={movie.posterUrl} width={150} height={250} />
-				<Heading size={"sm"}>
-					{movie.name} {rating}/5
-				</Heading>
-				<Text>{movie.shortDescription}</Text>
-			</Box>
-		))}
-	</SimpleGrid>;
-}
-
+const makeMoviesList = (movies: IMovies[]) => {
+	return (
+		<SimpleGrid columns={3} mt="12" gridGap={12}>
+			{(movies || []).map(
+				({ name, rating, posterUrl, shortDescription, id }) => (
+					<Box
+						key={id}
+						display="flex"
+						alignItems="center"
+						justifyContent="center"
+						flexDir="column"
+						textAlign="justify"
+					>
+						<Image src={posterUrl} width={150} height={250} />
+						<Heading size={"sm"}>
+							{name} {rating}/5
+						</Heading>
+						<Text>{shortDescription}</Text>
+					</Box>
+				)
+			)}
+		</SimpleGrid>
+	);
+};
