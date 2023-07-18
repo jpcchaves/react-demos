@@ -10,8 +10,6 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import http from "./http-common/http";
 
-import animateScrollTo from "animated-scroll-to";
-
 interface IApiRespondePaginated<T> {
 	content: Array<T>;
 	pageNo: number;
@@ -34,6 +32,16 @@ interface IActor {
 interface ICategories {
 	id?: number;
 	category: string;
+}
+
+interface IState {
+	id?: string;
+	name: string;
+	uf: string;
+}
+interface ICity {
+	id?: string;
+	name: string;
 }
 
 interface IMoviesApiResponse {}
@@ -61,6 +69,9 @@ const App = () => {
 	const [categories, setCategories] = useState<ICategories[]>([]);
 
 	const [movies, setMovies] = useState<any>(null);
+
+	const [states, setStates] = useState<IState[]>([]);
+	const [cities, setCities] = useState<ICity[]>([]);
 
 	const getDirectors = async () => {
 		await http
@@ -100,8 +111,29 @@ const App = () => {
 			.catch((err) => console.log(err));
 	};
 
+	const getCities = async () => {
+		await http
+			.get("/v1/cities?uf=pe")
+			.then((res) => setCities(res.data))
+			.catch((err) => console.log(err));
+	};
+
+	const getStates = async () => {
+		await http
+			.get("/v1/states")
+			.then((res) => setStates(res.data))
+			.catch((err) => console.log(err));
+	};
+
 	useEffect(() => {
-		Promise.all([getActors(), getDirectors(), getCategories(), getMovies()]);
+		Promise.all([
+			getActors(),
+			getDirectors(),
+			getCategories(),
+			getMovies(),
+			getCities(),
+			getStates(),
+		]);
 	}, []);
 
 	const makeDirectorAndActorOptions = (rawData: Array<IDirector | IActor>) => {
@@ -118,6 +150,15 @@ const App = () => {
 			return {
 				value: id,
 				label: category,
+			};
+		});
+	};
+
+	const makeOptions = <T extends { id?: string; name?: string }>(data: T[]) => {
+		return data.map((d: T) => {
+			return {
+				value: d.id,
+				label: d.name,
 			};
 		});
 	};
@@ -158,25 +199,22 @@ const App = () => {
 						<Select isMulti name="colors" options={OptionsData.options || []} />
 					</div>
 				</SimpleGrid>
+
+				<SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gridGap={6} mt={10}>
+					<div>
+						<h1>Estados</h1>
+						<Select name="colors" options={makeOptions(states) || []} />
+					</div>
+				</SimpleGrid>
+
+				<SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gridGap={6} mt={10}>
+					<div>
+						<h1>Cidade</h1>
+						<Select name="colors" options={makeOptions(cities) || []} />
+					</div>
+				</SimpleGrid>
 			</SimpleGrid>
 			{makeMoviesList(movies)}
-
-			<Container
-				display="flex"
-				h="container.lg"
-				w="container.xl"
-				bg={"red.300"}
-			></Container>
-
-			<Container display="flex" bg={"blue.300"} my="40">
-				<Box
-					onClick={() =>
-						animateScrollTo(document.querySelector(".cointainer-test"))
-					}
-				>
-					Scroll
-				</Box>
-			</Container>
 
 			<Base64Generator />
 		</Container>
